@@ -7,7 +7,7 @@ resource "aws_iam_role" "terraform_role" {
       {
         Effect = "Allow",
         Principal = {
-          Service = "ec2.amazonaws.com"  # or "lambda.amazonaws.com" if Lambda is using it
+          Service = "ec2.amazonaws.com" # or "lambda.amazonaws.com" if Lambda is using it
         },
         Action = "sts:AssumeRole"
       }
@@ -108,7 +108,7 @@ resource "aws_iam_role_policy_attachment" "lambda_sqs_attach" {
 resource "aws_iam_policy" "terraform_s3_policy" {
   name        = "TerraformS3StatePolicy"
   description = "IAM policy to allow Terraform to read and write state to S3"
-  policy      = jsonencode({
+  policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
       {
@@ -130,5 +130,5 @@ resource "aws_iam_policy" "terraform_s3_policy" {
 
 resource "aws_iam_role_policy_attachment" "terraform_s3_attach" {
   policy_arn = aws_iam_policy.terraform_s3_policy.arn
-  role       = aws_iam_role.terraform_role.name  # ✅ Ensure this matches the declared IAM role
+  role       = aws_iam_role.terraform_role.name # ✅ Ensure this matches the declared IAM role
 }
