@@ -4,8 +4,8 @@ resource "aws_iam_role" "lambda_role" {
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
-      Action = "sts:AssumeRole"
-      Effect = "Allow"
+      Action    = "sts:AssumeRole"
+      Effect    = "Allow"
       Principal = { Service = "lambda.amazonaws.com" }
     }]
   })
@@ -20,7 +20,7 @@ resource "aws_iam_policy_attachment" "lambda_dynamodb_attach" {
 resource "aws_iam_policy" "lambda_dynamodb_policy" {
   name        = "lambda_dynamodb_policy"
   description = "IAM policy for Lambda to access DynamoDB"
-  policy      = jsonencode({
+  policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
       {
@@ -45,7 +45,7 @@ resource "aws_iam_role_policy_attachment" "lambda_dynamodb_attach" {
 resource "aws_iam_policy" "lambda_eventbridge_policy" {
   name        = "LambdaEventBridgePolicy"
   description = "IAM policy to allow Lambda to publish events to EventBridge"
-  policy      = jsonencode({
+  policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
       {
@@ -67,7 +67,7 @@ resource "aws_iam_role_policy_attachment" "lambda_eventbridge_attach" {
 resource "aws_iam_policy" "lambda_sqs_policy" {
   name        = "LambdaSQSPolicy"
   description = "IAM policy to allow Lambda to send messages to SQS"
-  policy      = jsonencode({
+  policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
       {
