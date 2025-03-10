@@ -1,0 +1,14 @@
+# Terraform state files
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Lambda build files
+lambda_function.zip
+__pycache__/
+*.pyc
+.env
+
+# AWS credentials (for security)
+.aws/
