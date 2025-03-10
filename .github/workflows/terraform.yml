@@ -3,10 +3,11 @@ name: Terraform Deployment
 on:
   push:
     branches:
-      - main  # ✅ Runs on push to main branch
+      - main
   pull_request:
     branches:
-      - main  # ✅ Runs on pull requests
+      - main
+
 
 permissions:
   id-token: write
@@ -42,11 +43,12 @@ jobs:
       - name: 📝 Terraform Plan
         run: terraform plan -out=tfplan
 
-      - name: ✅ Require Approval Before Apply
+      - name: ✅ Auto-Approve Terraform Plan
         uses: hmarr/auto-approve-action@v3
-        if: github.ref == 'refs/heads/main'
+        if: github.event_name == 'pull_request'
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+
 
       - name: 🚀 Terraform Apply
         run: terraform apply -auto-approve tfplan
