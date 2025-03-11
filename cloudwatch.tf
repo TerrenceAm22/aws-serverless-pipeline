@@ -1,4 +1,4 @@
-# ✅ CloudWatch Alarm for Lambda Errors
+# CloudWatch Alarm for Lambda Errors
 resource "aws_cloudwatch_metric_alarm" "lambda_errors" {
   alarm_name          = "LambdaDataProcessorErrors"
   comparison_operator = "GreaterThanThreshold"
