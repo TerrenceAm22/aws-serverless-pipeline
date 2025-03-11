@@ -47,7 +47,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "analytics_lifecycle" {
     status = "Enabled"
 
     expiration {
-      days = 30  
+      days = 30
     }
   }
 }
