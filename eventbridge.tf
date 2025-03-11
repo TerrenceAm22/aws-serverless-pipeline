@@ -1,3 +1,10 @@
+# ✅ Create EventBridge Event Bus
+resource "aws_cloudwatch_event_bus" "data_submission_bus" {
+  name = "DataSubmissionBus"
+}
+
+
+
 # Create an EventBridge Rule to Trigger Analytics Lambda
 resource "aws_cloudwatch_event_rule" "new_data_submission_rule" {
   name           = "NewDataSubmissionRule"
@@ -16,3 +23,4 @@ resource "aws_cloudwatch_event_target" "analytics_lambda_target" {
   target_id = "InvokeAnalyticsLambda"
   arn       = aws_lambda_function.analytics_processor.arn
 }
+
