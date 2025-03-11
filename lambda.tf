@@ -20,10 +20,10 @@ resource "aws_lambda_function" "data_processor" {
 
 # Create Analytics Lambda Function
 resource "aws_lambda_function" "analytics_processor" {
-  function_name    = "AnalyticsProcessor"
-  role            = aws_iam_role.lambda_role.arn
-  handler         = "analytics_handler.lambda_handler"
-  runtime         = "python3.8"
+  function_name = "AnalyticsProcessor"
+  role          = aws_iam_role.lambda_role.arn
+  handler       = "analytics_handler.lambda_handler"
+  runtime       = "python3.8"
 
   filename         = "analytics_function.zip"
   source_code_hash = filebase64sha256("analytics_function.zip")
