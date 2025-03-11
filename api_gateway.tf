@@ -25,26 +25,26 @@ resource "aws_api_gateway_resource" "list_data" {
 }
 
 resource "aws_api_gateway_method" "post_submit_data" {
-  rest_api_id   = aws_api_gateway_rest_api.data_api.id
-  resource_id   = aws_api_gateway_resource.submit_data.id
-  http_method   = "POST"
-  authorization = "NONE"
+  rest_api_id      = aws_api_gateway_rest_api.data_api.id
+  resource_id      = aws_api_gateway_resource.submit_data.id
+  http_method      = "POST"
+  authorization    = "NONE"
   api_key_required = true
 
   lifecycle {
-    ignore_changes = [authorization, api_key_required]  # ✅ Prevents unnecessary recreation
+    ignore_changes = [authorization, api_key_required] # ✅ Prevents unnecessary recreation
   }
 }
 
 resource "aws_api_gateway_method" "get_list_data" {
-  rest_api_id   = aws_api_gateway_rest_api.data_api.id
-  resource_id   = aws_api_gateway_resource.list_data.id
-  http_method   = "GET"
-  authorization = "NONE"
+  rest_api_id      = aws_api_gateway_rest_api.data_api.id
+  resource_id      = aws_api_gateway_resource.list_data.id
+  http_method      = "GET"
+  authorization    = "NONE"
   api_key_required = true
 
   lifecycle {
-    ignore_changes = [authorization, api_key_required]  # ✅ Prevents unnecessary recreation
+    ignore_changes = [authorization, api_key_required] # ✅ Prevents unnecessary recreation
   }
 }
 

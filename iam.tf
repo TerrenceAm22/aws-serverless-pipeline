@@ -122,13 +122,13 @@ resource "aws_iam_policy" "lambda_sqs_policy" {
     Version = "2012-10-17",
     Statement = [
       {
-        Effect   = "Allow",
-        Action   = [
+        Effect = "Allow",
+        Action = [
           "sqs:SendMessage",
           "sqs:GetQueueUrl",
           "sqs:GetQueueAttributes"
         ],
-        Resource = "arn:aws:sqs:us-east-1:571600861898:DataSubmissionQueue"  # 
+        Resource = "arn:aws:sqs:us-east-1:571600861898:DataSubmissionQueue" # 
       }
     ]
   })
@@ -154,8 +154,8 @@ resource "aws_iam_policy" "lambda_s3_policy" {
     Version = "2012-10-17",
     Statement = [
       {
-        Effect   = "Allow",
-        Action   = [
+        Effect = "Allow",
+        Action = [
           "s3:PutObject",
           "s3:GetObject",
           "s3:ListBucket"
