@@ -38,7 +38,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "analytics_encrypt
   }
 }
 
-# Set Lifecycle Policy to Delete Old Data After 30 days
+# ✅ S3 Lifecycle Policy: Delete "logs/" objects after 90 days
 resource "aws_s3_bucket_lifecycle_configuration" "analytics_lifecycle" {
   bucket = aws_s3_bucket.analytics_data.id
 
@@ -46,8 +46,13 @@ resource "aws_s3_bucket_lifecycle_configuration" "analytics_lifecycle" {
     id     = "delete-old-logs"
     status = "Enabled"
 
+    filter {
+      prefix = "logs/"  # ✅ Apply the rule only to objects inside the "logs/" folder
+    }
+
     expiration {
-      days = 30
+      days = 90  # ✅ Delete logs after 90 days
     }
   }
 }
+

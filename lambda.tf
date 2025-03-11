@@ -18,12 +18,13 @@ resource "aws_lambda_function" "data_processor" {
   }
 }
 
-# Create Analytics Lambda Function
+
+# ✅ Create Analytics Lambda Function
 resource "aws_lambda_function" "analytics_processor" {
-  function_name = "AnalyticsProcessor"
-  role          = aws_iam_role.lambda_role.arn
-  handler       = "analytics_handler.lambda_handler"
-  runtime       = "python3.8"
+  function_name    = "AnalyticsProcessor"
+  role            = aws_iam_role.lambda_role.arn
+  handler         = "analytics_handler.lambda_handler"
+  runtime         = "python3.8"
 
   filename         = "analytics_function.zip"
   source_code_hash = filebase64sha256("analytics_function.zip")
@@ -31,11 +32,12 @@ resource "aws_lambda_function" "analytics_processor" {
   environment {
     variables = {
       ANALYTICS_BUCKET = aws_s3_bucket.analytics_data.id
+      ANALYTICS_TABLE  = aws_dynamodb_table.analytics_table.name
     }
   }
 }
 
-# Allow EventBridge to Invoke Analytics Lambda
+# ✅ Allow EventBridge to Invoke Analytics Lambda
 resource "aws_lambda_permission" "eventbridge_permission" {
   statement_id  = "AllowExecutionFromEventBridge"
   action        = "lambda:InvokeFunction"
@@ -43,3 +45,11 @@ resource "aws_lambda_permission" "eventbridge_permission" {
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.new_data_submission_rule.arn
 }
+
+# ✅ Allow SQS to Trigger Analytics Lambda
+resource "aws_lambda_event_source_mapping" "sqs_trigger" {
+  event_source_arn = aws_sqs_queue.analytics_queue.arn
+  function_name    = aws_lambda_function.analytics_processor.arn
+  batch_size       = 10
+}
+

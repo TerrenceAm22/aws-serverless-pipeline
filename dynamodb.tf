@@ -23,3 +23,14 @@ resource "aws_dynamodb_table" "rate_limit_table" {
     type = "S"
   }
 }
+
+resource "aws_dynamodb_table" "analytics_table" {
+  name           = "AnalyticsData"
+  billing_mode   = "PAY_PER_REQUEST"
+  hash_key       = "submission_id"
+
+  attribute {
+    name = "submission_id"
+    type = "S"
+  }
+}
