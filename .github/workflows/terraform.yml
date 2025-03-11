@@ -26,6 +26,13 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.5.7  # ✅ Use latest Terraform version
+      - name: 📦 Package Lambda Function
+        run: |
+            cd lambda_function
+            zip -r ../lambda_function.zip .
+            cd ..
+  
+      
 
       - name: 🔍 Verify Terraform Formatting
         run: terraform fmt -check
