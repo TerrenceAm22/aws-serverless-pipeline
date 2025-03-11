@@ -113,29 +113,64 @@ resource "aws_iam_role_policy_attachment" "terraform_s3_attach" {
 }
 
 
-# ✅ Add SQS Permissions to Lambda Execution Role
+# ✅ Add Permissions for Lambda to Send Messages to SQS
 resource "aws_iam_policy" "lambda_sqs_policy" {
   name        = "LambdaSQSPolicy"
-  description = "Allow Lambda to process messages from SQS"
+  description = "Allow Lambda to send messages to SQS"
 
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
       {
-        Effect = "Allow",
-        Action = [
-          "sqs:ReceiveMessage",
-          "sqs:DeleteMessage",
+        Effect   = "Allow",
+        Action   = [
+          "sqs:SendMessage",
+          "sqs:GetQueueUrl",
           "sqs:GetQueueAttributes"
         ],
-        Resource = aws_sqs_queue.analytics_queue.arn
+        Resource = "arn:aws:sqs:us-east-1:571600861898:DataSubmissionQueue"  # 
       }
     ]
   })
 }
 
-# ✅ Attach Policy to Lambda Role
+# ✅ Attach Policy to Lambda Execution Role
 resource "aws_iam_role_policy_attachment" "lambda_sqs_attach" {
   policy_arn = aws_iam_policy.lambda_sqs_policy.arn
+  role       = aws_iam_role.lambda_role.name
+}
+
+
+
+
+
+
+# ✅ Allow Lambda to Write to S3
+resource "aws_iam_policy" "lambda_s3_policy" {
+  name        = "LambdaS3Policy"
+  description = "Allow Lambda to write to S3"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect   = "Allow",
+        Action   = [
+          "s3:PutObject",
+          "s3:GetObject",
+          "s3:ListBucket"
+        ],
+        Resource = [
+          aws_s3_bucket.analytics_data.arn,
+          "${aws_s3_bucket.analytics_data.arn}/*"
+        ]
+      }
+    ]
+  })
+}
+
+# ✅ Attach Policy to Lambda Execution Role
+resource "aws_iam_role_policy_attachment" "lambda_s3_attach" {
+  policy_arn = aws_iam_policy.lambda_s3_policy.arn
   role       = aws_iam_role.lambda_role.name
 }
