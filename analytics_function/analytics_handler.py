@@ -52,14 +52,20 @@ def process_submission(submission):
     store_in_dynamodb(submission_id, analytics_record)
 
 def store_in_s3(submission_id, analytics_record):
-    """ Store analytics data in S3 """
-    s3.put_object(
-        Bucket=S3_BUCKET_NAME,
-        Key=f"analytics/{submission_id}.json",
-        Body=json.dumps(analytics_record),
-        ContentType="application/json"
-    )
-    print(f"Stored analytics data in S3: {submission_id}")
+    """ Store analytics data in S3 with error handling """
+    try:
+        response = s3.put_object(
+            Bucket=S3_BUCKET_NAME,
+            Key=f"analytics/{submission_id}.json",
+            Body=json.dumps(analytics_record),
+            ContentType="application/json"
+        )
+        print(f"✅ Stored analytics data in S3: {submission_id}")
+        return response
+
+    except Exception as e:
+        print(f"❌ Failed to store in S3: {str(e)}")
+        return None
 
 def store_in_dynamodb(submission_id, analytics_record):
     """ Store analytics data in DynamoDB """
