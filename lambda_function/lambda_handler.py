@@ -25,21 +25,46 @@ def lambda_handler(event, context):
         print("EVENT:", event)
 
         # Validate HTTP method
-        if event["httpMethod"] != "POST":
-            return {"statusCode": 400, "body": json.dumps({"error": "Invalid HTTP method"})}
+        if event["httpMethod"] == "POST":
 
-        # Parse request body
-        body = json.loads(event["body"])
+            # Parse request body
+            body = json.loads(event["body"])
 
-        # Check if it's a bulk insert
-        if isinstance(body, list):
-            return handle_bulk_insert(body, context)
-        else:
-            return handle_single_insert(body, context, event)
-
+            # Check if it's a bulk insert
+            if isinstance(body, list):
+                return handle_bulk_insert(body, context)
+            else:
+                return handle_single_insert(body, context, event)
+    
+        if event["httpMethod"] == 'GET':
+            return handle_get(event, context)
+    
     except Exception as e:
         print("Error:", str(e))
         return {"statusCode": 500, "body": json.dumps({"error": str(e)})}
+
+def handle_get(event, context):
+    """
+    Handle get requests to retrieve data
+    """
+    query_params = event.get("queryStringParameters", {})
+
+    if query_params and "id" in query_params:
+        # Retrieve specific submission by ID
+        submission_id = query_params["id"]
+        
+        response = table.get_item(Key={"id": submission_id})
+        
+        
+        if "Item" in response:
+            return {"statusCode": 200, "body": json.dumps(response["Item"])}
+        else:
+            return {"statusCode": 404, "body": json.dumps({"error": "Submission not found"})}
+    
+    # No specific ID was provided, list all data
+    response = table.scan()
+    return {"statusCode": 200, "body": json.dumps(response["Items"])}
+
 
 def handle_single_insert(body, context, event):
     """ Process a single submission """
