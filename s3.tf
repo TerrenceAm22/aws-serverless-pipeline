@@ -47,11 +47,11 @@ resource "aws_s3_bucket_lifecycle_configuration" "analytics_lifecycle" {
     status = "Enabled"
 
     filter {
-      prefix = "logs/"  # ✅ Apply the rule only to objects inside the "logs/" folder
+      prefix = "logs/" # ✅ Apply the rule only to objects inside the "logs/" folder
     }
 
     expiration {
-      days = 90  # ✅ Delete logs after 90 days
+      days = 90 # ✅ Delete logs after 90 days
     }
   }
 }

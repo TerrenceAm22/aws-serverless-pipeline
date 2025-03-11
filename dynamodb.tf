@@ -25,9 +25,9 @@ resource "aws_dynamodb_table" "rate_limit_table" {
 }
 
 resource "aws_dynamodb_table" "analytics_table" {
-  name           = "AnalyticsData"
-  billing_mode   = "PAY_PER_REQUEST"
-  hash_key       = "submission_id"
+  name         = "AnalyticsData"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "submission_id"
 
   attribute {
     name = "submission_id"
