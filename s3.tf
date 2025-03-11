@@ -1,23 +1,29 @@
-# ✅ Create an S3 Bucket for Analytics Data
+data "aws_caller_identity" "current" {}
+
 resource "aws_s3_bucket" "analytics_data" {
-  bucket = "analytics-data-bucket-${var.environment}"
+  bucket = "analytics-data-bucket-${data.aws_caller_identity.current.account_id}-${var.environment}"
 }
 
-# ✅ Apply an S3 Bucket Policy to Control Access
+
+# ✅ Update S3 Bucket Policy to Allow Access Only to Your Account
 resource "aws_s3_bucket_policy" "analytics_bucket_policy" {
   bucket = aws_s3_bucket.analytics_data.id
+
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
       {
-        Effect    = "Allow",
-        Principal = "*",
-        Action    = ["s3:GetObject", "s3:PutObject"],
-        Resource  = "${aws_s3_bucket.analytics_data.arn}/*"
+        Effect   = "Allow",
+        Principal = {
+          "AWS": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
+        },
+        Action   = ["s3:GetObject", "s3:PutObject"],
+        Resource = "${aws_s3_bucket.analytics_data.arn}/*"
       }
     ]
   })
 }
+
 
 # ✅ Enable S3 Bucket Versioning 
 resource "aws_s3_bucket_versioning" "analytics_versioning" {

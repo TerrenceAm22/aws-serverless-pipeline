@@ -132,3 +132,31 @@ resource "aws_iam_role_policy_attachment" "terraform_s3_attach" {
   policy_arn = aws_iam_policy.terraform_s3_policy.arn
   role       = aws_iam_role.terraform_role.name # ✅ Ensure this matches the declared IAM role
 }
+
+
+# ✅ Add SQS Permissions to Lambda Execution Role
+resource "aws_iam_policy" "lambda_sqs_policy" {
+  name        = "LambdaSQSPolicy"
+  description = "Allow Lambda to process messages from SQS"
+  
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect   = "Allow",
+        Action   = [
+          "sqs:ReceiveMessage",
+          "sqs:DeleteMessage",
+          "sqs:GetQueueAttributes"
+        ],
+        Resource = aws_sqs_queue.analytics_queue.arn
+      }
+    ]
+  })
+}
+
+# ✅ Attach Policy to Lambda Role
+resource "aws_iam_role_policy_attachment" "lambda_sqs_attach" {
+  policy_arn = aws_iam_policy.lambda_sqs_policy.arn
+  role       = aws_iam_role.lambda_role.name
+}
