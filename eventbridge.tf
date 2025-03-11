@@ -1,18 +1,18 @@
-resource "aws_cloudwatch_event_rule" "data_submission_rule" {
-  name        = "DataSubmissionRule"
-  description = "Trigger event when data is submitted"
+# Create an EventBridge Rule to Trigger Analytics Lambda
+resource "aws_cloudwatch_event_rule" "new_data_submission_rule" {
+  name        = "NewDataSubmissionRule"
+  description = "Trigger analytics Lambda when new data is submitted"
+  event_bus_name = aws_cloudwatch_event_bus.data_submission_bus.name
+
   event_pattern = jsonencode({
-    source      = ["aws.lambda"],
-    detail-type = ["DataSubmission"]
+    "source" : ["dataProcessor.lambda"],
+    "detail-type" : ["NewDataSubmission"]
   })
 }
 
-resource "aws_cloudwatch_event_target" "lambda_target" {
-  rule = aws_cloudwatch_event_rule.data_submission_rule.name
-  arn  = aws_lambda_function.data_processor.arn
-}
-
-
-resource "aws_cloudwatch_event_bus" "data_submission_bus" {
-  name = "DataSubmissionBus"
+#Set EventBridge Target to Invoke Analytics Lambda
+resource "aws_cloudwatch_event_target" "analytics_lambda_target" {
+  rule      = aws_cloudwatch_event_rule.new_data_submission_rule.name
+  target_id = "InvokeAnalyticsLambda"
+  arn       = aws_lambda_function.analytics_processor.arn
 }

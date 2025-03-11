@@ -17,3 +17,29 @@ resource "aws_lambda_function" "data_processor" {
     }
   }
 }
+
+# Create Analytics Lambda Function
+resource "aws_lambda_function" "analytics_processor" {
+  function_name    = "AnalyticsProcessor"
+  role            = aws_iam_role.lambda_role.arn
+  handler         = "analytics_handler.lambda_handler"
+  runtime         = "python3.8"
+
+  filename         = "analytics_function.zip"
+  source_code_hash = filebase64sha256("analytics_function.zip")
+
+  environment {
+    variables = {
+      ANALYTICS_BUCKET = aws_s3_bucket.analytics_data.id
+    }
+  }
+}
+
+# Allow EventBridge to Invoke Analytics Lambda
+resource "aws_lambda_permission" "eventbridge_permission" {
+  statement_id  = "AllowExecutionFromEventBridge"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.analytics_processor.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.new_data_submission_rule.arn
+}
