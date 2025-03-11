@@ -138,13 +138,13 @@ resource "aws_iam_role_policy_attachment" "terraform_s3_attach" {
 resource "aws_iam_policy" "lambda_sqs_policy" {
   name        = "LambdaSQSPolicy"
   description = "Allow Lambda to process messages from SQS"
-  
+
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
       {
-        Effect   = "Allow",
-        Action   = [
+        Effect = "Allow",
+        Action = [
           "sqs:ReceiveMessage",
           "sqs:DeleteMessage",
           "sqs:GetQueueAttributes"

@@ -13,9 +13,9 @@ resource "aws_s3_bucket_policy" "analytics_bucket_policy" {
     Version = "2012-10-17",
     Statement = [
       {
-        Effect   = "Allow",
+        Effect = "Allow",
         Principal = {
-          "AWS": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
+          "AWS" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
         },
         Action   = ["s3:GetObject", "s3:PutObject"],
         Resource = "${aws_s3_bucket.analytics_data.arn}/*"

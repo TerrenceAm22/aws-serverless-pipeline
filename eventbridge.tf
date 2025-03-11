@@ -5,8 +5,8 @@ resource "aws_cloudwatch_event_bus" "data_submission_bus" {
 
 # ✅ Create EventBridge Rule FIRST
 resource "aws_cloudwatch_event_rule" "new_data_submission_rule" {
-  name        = "NewDataSubmissionRule"
-  description = "Trigger analytics Lambda when new data is submitted"
+  name           = "NewDataSubmissionRule"
+  description    = "Trigger analytics Lambda when new data is submitted"
   event_bus_name = aws_cloudwatch_event_bus.data_submission_bus.name
 
   event_pattern = jsonencode({
@@ -21,7 +21,7 @@ resource "aws_cloudwatch_event_target" "analytics_lambda_target" {
   target_id = "InvokeAnalyticsLambda"
   arn       = aws_lambda_function.analytics_processor.arn
 
-  depends_on = [aws_cloudwatch_event_rule.new_data_submission_rule]  # Ensures rule is created first
+  depends_on = [aws_cloudwatch_event_rule.new_data_submission_rule] # Ensures rule is created first
 }
 
 
