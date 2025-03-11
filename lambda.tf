@@ -30,11 +30,11 @@ resource "aws_lambda_function" "analytics_processor" {
   source_code_hash = filebase64sha256("analytics_function.zip")
 
   environment {
-  variables = {
-    ANALYTICS_BUCKET = "analytics-data-bucket-571600861898"
-    ANALYTICS_TABLE  = "AnalyticsDynamoDBTable"
+    variables = {
+      ANALYTICS_BUCKET = "analytics-data-bucket-571600861898"
+      ANALYTICS_TABLE  = "AnalyticsDynamoDBTable"
+    }
   }
-}
 }
 
 
