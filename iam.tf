@@ -99,12 +99,6 @@ resource "aws_iam_policy" "lambda_sqs_policy" {
   })
 }
 
-# Attach IAM policy to Lambda execution role
-resource "aws_iam_role_policy_attachment" "lambda_sqs_attach" {
-  policy_arn = aws_iam_policy.lambda_sqs_policy.arn
-  role       = aws_iam_role.lambda_role.name
-}
-
 resource "aws_iam_policy" "terraform_s3_policy" {
   name        = "TerraformS3StatePolicy"
   description = "IAM policy to allow Terraform to read and write state to S3"
