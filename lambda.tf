@@ -37,14 +37,6 @@ resource "aws_lambda_function" "analytics_processor" {
   }
 }
 
-# ✅ Allow EventBridge to Invoke Analytics Lambda
-resource "aws_lambda_permission" "eventbridge_permission" {
-  statement_id  = "AllowExecutionFromEventBridge"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.analytics_processor.function_name
-  principal     = "events.amazonaws.com"
-  source_arn    = aws_cloudwatch_event_rule.new_data_submission_rule.arn
-}
 
 # ✅ Allow SQS to Trigger Analytics Lambda
 resource "aws_lambda_event_source_mapping" "sqs_trigger" {
