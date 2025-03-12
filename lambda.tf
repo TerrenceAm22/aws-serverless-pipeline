@@ -12,7 +12,7 @@ resource "aws_lambda_function" "data_processor" {
     variables = {
       DYNAMODB_TABLE   = aws_dynamodb_table.data_table.name
       RATE_LIMIT_TABLE = aws_dynamodb_table.rate_limit_table.name
-      EVENT_BUS_NAME   = aws_cloudwatch_event_bus.data_submission_bus.name 
+      EVENT_BUS_NAME   = aws_cloudwatch_event_bus.data_submission_bus.name
       SQS_QUEUE_URL    = aws_sqs_queue.submission_queue.url
     }
   }
@@ -22,7 +22,7 @@ resource "aws_lambda_function" "data_processor" {
 # ✅ Create Analytics Lambda Function
 resource "aws_lambda_function" "analytics_processor" {
   function_name = "AnalyticsProcessor"
-  role          = aws_iam_role.lambda_execution_role.arn 
+  role          = aws_iam_role.lambda_execution_role.arn
   handler       = "analytics_handler.lambda_handler"
   runtime       = "python3.8"
 
@@ -31,8 +31,8 @@ resource "aws_lambda_function" "analytics_processor" {
 
   environment {
     variables = {
-      ANALYTICS_BUCKET = aws_s3_bucket.analytics_data.id 
-      ANALYTICS_TABLE  = aws_dynamodb_table.analytics_table.name 
+      ANALYTICS_BUCKET = aws_s3_bucket.analytics_data.id
+      ANALYTICS_TABLE  = aws_dynamodb_table.analytics_table.name
     }
   }
 }

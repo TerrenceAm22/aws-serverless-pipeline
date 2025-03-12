@@ -46,8 +46,8 @@ resource "aws_iam_policy" "lambda_dynamodb_policy" {
     Version = "2012-10-17",
     Statement = [
       {
-        Effect   = "Allow",
-        Action   = [
+        Effect = "Allow",
+        Action = [
           "dynamodb:PutItem",
           "dynamodb:GetItem",
           "dynamodb:Scan"
@@ -74,7 +74,7 @@ resource "aws_iam_policy" "lambda_eventbridge_policy" {
       {
         Effect   = "Allow",
         Action   = "events:PutEvents",
-        Resource = aws_cloudwatch_event_bus.data_submission_bus.arn 
+        Resource = aws_cloudwatch_event_bus.data_submission_bus.arn
       }
     ]
   })
@@ -83,18 +83,18 @@ resource "aws_iam_policy" "lambda_eventbridge_policy" {
 
 resource "aws_iam_role_policy_attachment" "lambda_eventbridge_attach" {
   policy_arn = aws_iam_policy.lambda_eventbridge_policy.arn
-  role       = aws_iam_role.lambda_execution_role.name 
+  role       = aws_iam_role.lambda_execution_role.name
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_sqs_attach" {
   policy_arn = aws_iam_policy.lambda_sqs_policy.arn
-  role       = aws_iam_role.lambda_execution_role.name 
+  role       = aws_iam_role.lambda_execution_role.name
 }
 
 
 resource "aws_iam_role_policy_attachment" "lambda_s3_attach" {
   policy_arn = aws_iam_policy.lambda_s3_policy.arn
-  role       = aws_iam_role.lambda_execution_role.name 
+  role       = aws_iam_role.lambda_execution_role.name
 }
 
 
@@ -107,8 +107,8 @@ resource "aws_iam_policy" "lambda_s3_policy" {
     Version = "2012-10-17",
     Statement = [
       {
-        Effect   = "Allow",
-        Action   = [
+        Effect = "Allow",
+        Action = [
           "s3:PutObject",
           "s3:GetObject",
           "s3:ListBucket"
@@ -132,8 +132,8 @@ resource "aws_iam_policy" "lambda_sqs_policy" {
     Version = "2012-10-17",
     Statement = [
       {
-        Effect   = "Allow",
-        Action   = [
+        Effect = "Allow",
+        Action = [
           "sqs:SendMessage",
           "sqs:GetQueueUrl",
           "sqs:GetQueueAttributes"
@@ -151,8 +151,8 @@ resource "aws_iam_policy" "lambda_kms_policy" {
     Version = "2012-10-17",
     Statement = [
       {
-        Effect   = "Allow",
-        Action   = [
+        Effect = "Allow",
+        Action = [
           "kms:Decrypt",
           "kms:GenerateDataKey"
         ],

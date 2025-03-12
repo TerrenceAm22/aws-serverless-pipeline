@@ -4,7 +4,7 @@ resource "aws_kms_key" "lambda_kms_key" {
 
   policy = jsonencode({
     Version = "2012-10-17",
-    Id = "kms-lambda-policy",
+    Id      = "kms-lambda-policy",
     Statement = [
       # ✅ AWS Root User full access
       {
@@ -12,7 +12,7 @@ resource "aws_kms_key" "lambda_kms_key" {
         Principal = {
           AWS = "arn:aws:iam::571600861898:root"
         },
-        Action = "kms:*",
+        Action   = "kms:*",
         Resource = "*"
       },
       # ✅ Allow Lambda execution role to use the key
