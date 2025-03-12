@@ -1,7 +1,7 @@
-# Create EventBridge Event Bus
 resource "aws_cloudwatch_event_bus" "data_submission_bus" {
   name = "DataSubmissionBus"
 }
+
 
 # Create EventBridge Rule (Ensure it is on the correct Event Bus)
 resource "aws_cloudwatch_event_rule" "new_data_submission_rule" {

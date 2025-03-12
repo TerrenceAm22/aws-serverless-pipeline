@@ -1,3 +1,26 @@
+# ✅ Define the Lambda Execution Role
+resource "aws_iam_role" "lambda_execution_role" {
+  name = "lambda_execution_role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Principal = {
+          Service = "lambda.amazonaws.com"
+        },
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+
+  lifecycle {
+    ignore_changes = [name]
+  }
+}
+
+# Define the Terraform Execution Role
 resource "aws_iam_role" "terraform_role" {
   name = "TerraformExecutionRole"
 
@@ -7,7 +30,7 @@ resource "aws_iam_role" "terraform_role" {
       {
         Effect = "Allow",
         Principal = {
-          Service = "ec2.amazonaws.com" # or "lambda.amazonaws.com" if Lambda is using it
+          Service = "ec2.amazonaws.com"
         },
         Action = "sts:AssumeRole"
       }
@@ -15,28 +38,7 @@ resource "aws_iam_role" "terraform_role" {
   })
 }
 
-
-
-
-resource "aws_iam_role" "lambda_role" {
-  name = "lambda_execution_role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{
-      Action    = "sts:AssumeRole"
-      Effect    = "Allow"
-      Principal = { Service = "lambda.amazonaws.com" }
-    }]
-  })
-}
-
-resource "aws_iam_policy_attachment" "lambda_dynamodb_attach" {
-  name       = "lambda-dynamodb-policy-attach"
-  roles      = [aws_iam_role.lambda_role.name]
-  policy_arn = "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
-}
-
+# Attach DynamoDB Permissions to Lambda
 resource "aws_iam_policy" "lambda_dynamodb_policy" {
   name        = "lambda_dynamodb_policy"
   description = "IAM policy for Lambda to access DynamoDB"
@@ -44,12 +46,12 @@ resource "aws_iam_policy" "lambda_dynamodb_policy" {
     Version = "2012-10-17",
     Statement = [
       {
-        Action = [
+        Effect   = "Allow",
+        Action   = [
           "dynamodb:PutItem",
           "dynamodb:GetItem",
           "dynamodb:Scan"
         ],
-        Effect   = "Allow",
         Resource = aws_dynamodb_table.data_table.arn
       }
     ]
@@ -58,9 +60,10 @@ resource "aws_iam_policy" "lambda_dynamodb_policy" {
 
 resource "aws_iam_role_policy_attachment" "lambda_dynamodb_attach" {
   policy_arn = aws_iam_policy.lambda_dynamodb_policy.arn
-  role       = aws_iam_role.lambda_role.name
+  role       = aws_iam_role.lambda_execution_role.name # ✅ FIXED
 }
 
+# Allow Lambda to Publish Events to EventBridge
 
 resource "aws_iam_policy" "lambda_eventbridge_policy" {
   name        = "LambdaEventBridgePolicy"
@@ -71,81 +74,31 @@ resource "aws_iam_policy" "lambda_eventbridge_policy" {
       {
         Effect   = "Allow",
         Action   = "events:PutEvents",
-        Resource = aws_cloudwatch_event_bus.data_submission_bus.arn
+        Resource = aws_cloudwatch_event_bus.data_submission_bus.arn 
       }
     ]
   })
 }
 
-# Attaching the new policy to the Lambda execution role
+
 resource "aws_iam_role_policy_attachment" "lambda_eventbridge_attach" {
   policy_arn = aws_iam_policy.lambda_eventbridge_policy.arn
-  role       = aws_iam_role.lambda_role.name
+  role       = aws_iam_role.lambda_execution_role.name 
 }
 
-
-resource "aws_iam_policy" "terraform_s3_policy" {
-  name        = "TerraformS3StatePolicy"
-  description = "IAM policy to allow Terraform to read and write state to S3"
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect = "Allow",
-        Action = [
-          "s3:ListBucket",
-          "s3:GetObject",
-          "s3:PutObject",
-          "s3:DeleteObject"
-        ],
-        Resource = [
-          "arn:aws:s3:::your-terraform-states-bucket",
-          "arn:aws:s3:::your-terraform-states-bucket/*"
-        ]
-      }
-    ]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "terraform_s3_attach" {
-  policy_arn = aws_iam_policy.terraform_s3_policy.arn
-  role       = aws_iam_role.terraform_role.name # ✅ Ensure this matches the declared IAM role
-}
-
-
-# ✅ Add Permissions for Lambda to Send Messages to SQS
-resource "aws_iam_policy" "lambda_sqs_policy" {
-  name        = "LambdaSQSPolicy"
-  description = "Allow Lambda to send messages to SQS"
-
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect = "Allow",
-        Action = [
-          "sqs:SendMessage",
-          "sqs:GetQueueUrl",
-          "sqs:GetQueueAttributes"
-        ],
-        Resource = "arn:aws:sqs:us-east-1:571600861898:DataSubmissionQueue" # 
-      }
-    ]
-  })
-}
-
-# ✅ Attach Policy to Lambda Execution Role
 resource "aws_iam_role_policy_attachment" "lambda_sqs_attach" {
   policy_arn = aws_iam_policy.lambda_sqs_policy.arn
-  role       = aws_iam_role.lambda_role.name
+  role       = aws_iam_role.lambda_execution_role.name 
 }
 
 
+resource "aws_iam_role_policy_attachment" "lambda_s3_attach" {
+  policy_arn = aws_iam_policy.lambda_s3_policy.arn
+  role       = aws_iam_role.lambda_execution_role.name 
+}
 
 
-
-
-# ✅ Allow Lambda to Write to S3
+# Allow Lambda to Write to S3
 resource "aws_iam_policy" "lambda_s3_policy" {
   name        = "LambdaS3Policy"
   description = "Allow Lambda to write to S3"
@@ -154,23 +107,62 @@ resource "aws_iam_policy" "lambda_s3_policy" {
     Version = "2012-10-17",
     Statement = [
       {
-        Effect = "Allow",
-        Action = [
+        Effect   = "Allow",
+        Action   = [
           "s3:PutObject",
           "s3:GetObject",
           "s3:ListBucket"
         ],
         Resource = [
           aws_s3_bucket.analytics_data.arn,
-          "${aws_s3_bucket.analytics_data.arn}/*"
+          "${aws_s3_bucket.analytics_data.arn}/*",
+          "arn:aws:s3:::analytics-data-bucket-571600861898/analytics/*"
         ]
       }
     ]
   })
 }
 
-# ✅ Attach Policy to Lambda Execution Role
-resource "aws_iam_role_policy_attachment" "lambda_s3_attach" {
-  policy_arn = aws_iam_policy.lambda_s3_policy.arn
-  role       = aws_iam_role.lambda_role.name
+# IAM Policy for Lambda to Send Messages to SQS
+resource "aws_iam_policy" "lambda_sqs_policy" {
+  name        = "LambdaSQSPolicy"
+  description = "IAM policy to allow Lambda to send messages to SQS"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect   = "Allow",
+        Action   = [
+          "sqs:SendMessage",
+          "sqs:GetQueueUrl",
+          "sqs:GetQueueAttributes"
+        ],
+        Resource = aws_sqs_queue.submission_queue.arn
+      }
+    ]
+  })
+}
+resource "aws_iam_policy" "lambda_kms_policy" {
+  name        = "LambdaKMSPolicy"
+  description = "Allow Lambda to decrypt environment variables using KMS"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect   = "Allow",
+        Action   = [
+          "kms:Decrypt",
+          "kms:GenerateDataKey"
+        ],
+        Resource = "arn:aws:kms:us-east-1:571600861898:key/3edaaa00-c70f-4c87-b5f3-b3140e83792d"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_kms_attach" {
+  policy_arn = aws_iam_policy.lambda_kms_policy.arn
+  role       = aws_iam_role.lambda_execution_role.name
 }
