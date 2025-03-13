@@ -43,9 +43,14 @@ def lambda_handler(event, context):
         print("Error:", str(e))
         return {"statusCode": 500, "body": json.dumps({"error": str(e)})}
 
+
+    # No specific ID was provided, list all data
+    response = table.scan()
+    return {"statusCode": 200, "body": json.dumps(response["Items"])}
+
 def handle_get(event, context):
     """
-    Handle get requests to retrieve data
+    GET requests to retrieve data from DynamoDB either by ID or all data
     """
     query_params = event.get("queryStringParameters", {})
 
@@ -55,13 +60,12 @@ def handle_get(event, context):
         
         response = table.get_item(Key={"id": submission_id})
         
-        
         if "Item" in response:
             return {"statusCode": 200, "body": json.dumps(response["Item"])}
         else:
             return {"statusCode": 404, "body": json.dumps({"error": "Submission not found"})}
     
-    # No specific ID was provided, list all data
+    # If No specific ID was provided, scan and return all data
     response = table.scan()
     return {"statusCode": 200, "body": json.dumps(response["Items"])}
 
