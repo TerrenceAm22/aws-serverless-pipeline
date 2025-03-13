@@ -72,3 +72,33 @@ Resources created should be:
 3. Lambda Function
 4. IAM policies configured for each resource. 
 5. KMS associated with API, for security. 
+
+
+Testing API Gateway, with the following endpoints. 
+
+a.	POST /submitData: Accepts user data submissions.
+b.	GET /data?id={id} : Retrieves a specific data entry by its ID.
+c.	GET /data : return all data
+
+Testing Lambda Function that inserts data
+Checks for existing ID before inserting
+Check for blacklisted Keywords and rejects submission if they are included
+Adds metadata, submission time, stores info in DynamoDB
+
+DynamoDB Table UserSubmission Config
+
+Billing uses pay per request based on read/write permissions
+Id as the primary key
+Adds a tag
+
+Rate limit table
+
+Uses same billing mode. 
+user_id as the primary key
+
+Tracks API usage,
+Requests counts per user
+Last timestamp see rate limit function in lambda 
+
+
+Optional updates can include PITR for backup purposes. 
