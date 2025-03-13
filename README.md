@@ -97,6 +97,8 @@ Checks for existing ID before inserting
 Check for blacklisted Keywords and rejects submission if they are included
 Adds metadata, submission time, stores info in DynamoDB
 
+Make sure to .zip the file, you can also configure the yml file the github actions to do it during deployment. 
+
 DynamoDB Table UserSubmission Config
 
 Billing uses pay per request based on read/write permissions
@@ -133,5 +135,46 @@ IAM roles are set up in a way for least privilege, which ensures a resource only
 Also helps meet compliance for company security requirements.
 
 
+ I am  also automating this deployment everytime I do a push to the repo using github actions. This is setup in the yml file which defines what happens during terraform deplyoments. 
+
+You can specify when to run either on push or pull onto the main branch.\
+
+You set permissions to read and write from the repo.
+
+You name the particular deployment. I have named it Terraform Deployment, which runs on a ubuntu runner. 
+
+Step 1: 
+
+CLones the repo into the runner, it needs access to the terraform and lambda files. 
+
+Step 2:
+
+Installs terraform on the runner.
+
+Step 3:
+
+You are able to add this step if you want to automate the zipping of the lamda function
+
+Step 4:
+
+Ensure proper syntax before deploying. Run "terraform fmt" manually in command line is an option. 
+
+Step 5:
+
+Verify proper AWS credentials, make sure to use proper secrets variables as best practice. You set these secrets in your Github account. 
 
 
+Step 6:
+
+Terraform Init
+
+
+Step 7:
+
+Terraform Plan
+You can also use terraform plan -out=tfplan which saves the plan, which helps prevent unexpected changes. For example manually modifying a S3 bucket
+from the console instead of the terraform deployment. 
+
+Step 8:
+
+Terraform Apply
