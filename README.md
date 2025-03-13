@@ -102,3 +102,24 @@ Last timestamp see rate limit function in lambda
 
 
 Optional updates can include PITR for backup purposes. 
+
+
+
+
+Security Aspect.
+
+
+API Access requires 
+
+Helps retrict access to the API to only authorized clients.
+Also helps with usage tracking which clients hit the API the most. Alot of business utlity there. 
+Header in this format x-api-key. 
+
+
+IAM roles are set up in a way for least privilege, which ensures a resource only has the permission to do what it needs to do. Which helps with preventing accidental deletion of data or of modifying data or exposing. 
+
+Also helps meet compliance for company security requirements.
+
+
+
+
