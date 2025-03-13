@@ -1,3 +1,15 @@
+
+![Lab](https://github.com/user-attachments/assets/16b6ff02-88bc-49d0-8a73-984ab946087d)
+
+
+
+
+
+
+
+
+
+
 Step by Step Process on setting up a terraform deployment in serverless architecture
 
 STEP 1:
