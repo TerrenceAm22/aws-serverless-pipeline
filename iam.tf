@@ -20,24 +20,6 @@ resource "aws_iam_role" "lambda_execution_role" {
   }
 }
 
-# Define the Terraform Execution Role
-resource "aws_iam_role" "terraform_role" {
-  name = "TerraformExecutionRole"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect = "Allow",
-        Principal = {
-          Service = "ec2.amazonaws.com"
-        },
-        Action = "sts:AssumeRole"
-      }
-    ]
-  })
-}
-
 # Attach DynamoDB Permissions to Lambda
 resource "aws_iam_policy" "lambda_dynamodb_policy" {
   name        = "lambda_dynamodb_policy"

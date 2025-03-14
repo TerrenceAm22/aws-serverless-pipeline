@@ -153,7 +153,7 @@ Installs terraform on the runner.
 
 Step 3:
 
-You are able to add this step if you want to automate the zipping of the lamda function
+You are able to add this step if you want to automate the zipping of the lambda function
 
 Step 4:
 
@@ -177,4 +177,8 @@ from the console instead of the terraform deployment.
 
 Step 8:
 
+<<<<<<< HEAD
 Terraform Apply
+=======
+Terraform Apply.
+>>>>>>> b5fd050 (small changes)
