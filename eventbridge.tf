@@ -3,17 +3,32 @@ resource "aws_cloudwatch_event_bus" "data_submission_bus" {
 }
 
 
-# Create EventBridge Rule (Ensure it is on the correct Event Bus)
 resource "aws_cloudwatch_event_rule" "new_data_submission_rule" {
-  name           = "NewDataSubmissionRule"
-  description    = "Trigger SNS on Lambda suucess or failure"
-  event_bus_name = aws_cloudwatch_event_bus.data_submission_bus.name
+  name        = "NewDataSubmissionRule"
+  description = "Triggers on new data submission to EventBridge"
+  
+  event_pattern = jsonencode({
+    source      = ["aws.lambda"]
+    "detail-type" = ["Lambda Function Invocation Result - Success"]
+    detail = {
+      requestContext = {
+        functionArn = [aws_lambda_function.data_processor.arn]
+      }
+    }
+  })
+}
+
+resource "aws_cloudwatch_event_rule" "lambda_execution_rule" {
+  name        = "LambdaExecutionEventRule"
+  description = "Triggers SNS on Lambda execution success or failure"
 
   event_pattern = jsonencode({
-    "source" : ["dataProcessor.lambda"],
-    "detail-type" : ["Lambda Function Invocation Result - Success", "Lambda Function Invocation Result - Failure"]
-    "detail" : {
-      "status" : ["SUCCESS", "FAILURE"]
+    source      = ["aws.lambda"]
+    "detail-type" = ["Lambda Function Invocation Result - Success", "Lambda Function Invocation Result - Failure"]
+    detail = {
+      requestContext = {
+        functionArn = [aws_lambda_function.data_processor.arn]
+      }
     }
   })
 }
@@ -73,3 +88,6 @@ resource "aws_lambda_permission" "eventbridge_permission" {
   source_arn    = aws_cloudwatch_event_rule.new_data_submission_rule.arn
 }
 
+output "new_data_submission_rule_name" {
+  value = aws_cloudwatch_event_rule.new_data_submission_rule.name
+}
