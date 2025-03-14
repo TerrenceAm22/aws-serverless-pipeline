@@ -6,9 +6,9 @@ resource "aws_cloudwatch_event_bus" "data_submission_bus" {
 resource "aws_cloudwatch_event_rule" "new_data_submission_rule" {
   name        = "NewDataSubmissionRule"
   description = "Triggers on new data submission to EventBridge"
-  
+
   event_pattern = jsonencode({
-    source      = ["aws.lambda"]
+    source        = ["aws.lambda"]
     "detail-type" = ["Lambda Function Invocation Result - Success"]
     detail = {
       requestContext = {
@@ -23,7 +23,7 @@ resource "aws_cloudwatch_event_rule" "lambda_execution_rule" {
   description = "Triggers SNS on Lambda execution success or failure"
 
   event_pattern = jsonencode({
-    source      = ["aws.lambda"]
+    source        = ["aws.lambda"]
     "detail-type" = ["Lambda Function Invocation Result - Success", "Lambda Function Invocation Result - Failure"]
     detail = {
       requestContext = {
