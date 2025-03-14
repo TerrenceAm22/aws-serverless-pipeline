@@ -117,7 +117,7 @@ Last timestamp see rate limit function in lambda
 
 Optional updates can include PITR for backup purposes. 
 
-
+Cloudwatch Monitoring Set up 
 
 
 Security Aspect.
@@ -177,8 +177,13 @@ from the console instead of the terraform deployment.
 
 Step 8:
 
-<<<<<<< HEAD
 Terraform Apply
-=======
-Terraform Apply.
->>>>>>> b5fd050 (small changes)
+
+Some problems I encountered while constructing the project. 
+ 1. Configuring the correct the IAM roles to make sure lambda can correctly interact with each resource effectively. 
+ 2. Deploying with terraform and learning formatting, and also automating it with github actions. 
+ 3. Producing the get/post endpoints within the API Gateway and testing dummy data with correct syntax
+ 4. Working the lambda function and optimizing the code. 
+ 5. Drawing the architecture diagram and understanding how each service interacts with the other within AWS. 
+ 6. Configuring Github Actions. 
+ 7. Setting up the eventbridge data submit bus. 

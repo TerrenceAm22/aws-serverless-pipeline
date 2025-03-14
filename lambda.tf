@@ -19,7 +19,7 @@ resource "aws_lambda_function" "data_processor" {
 }
 
 
-# ✅ Create Analytics Lambda Function
+# Create Analytics Lambda Function
 resource "aws_lambda_function" "analytics_processor" {
   function_name = "AnalyticsProcessor"
   role          = aws_iam_role.lambda_execution_role.arn

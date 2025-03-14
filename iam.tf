@@ -20,6 +20,7 @@ resource "aws_iam_role" "lambda_execution_role" {
   }
 }
 
+
 # Attach DynamoDB Permissions to Lambda
 resource "aws_iam_policy" "lambda_dynamodb_policy" {
   name        = "lambda_dynamodb_policy"

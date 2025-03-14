@@ -16,6 +16,13 @@ resource "aws_cloudwatch_metric_alarm" "lambda_errors" {
   }
 }
 
+resource "aws_iam_policy_attachment" "lambda_cw_logs" {
+  name       = "LambdaCloudWatchPolicy"
+  roles      = [aws_iam_role.lambda_execution_role.name]
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+
 # CloudWatch Log Group with Retention Policy (7 Days)
 resource "aws_cloudwatch_log_group" "lambda_logs" {
   name              = "/aws/lambda/${aws_lambda_function.data_processor.function_name}"
