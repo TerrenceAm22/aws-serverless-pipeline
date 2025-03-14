@@ -24,8 +24,8 @@ resource "aws_sns_topic" "lambda_event_topic" {
 }
 
 resource "aws_cloudwatch_event_target" "sns_target" {
-  rule      = aws_cloudwatch_event_rule.lambda_execution_rule.name
-  arn       = aws_sns_topic.lambda_event_topic.arn
+  rule = aws_cloudwatch_event_rule.lambda_execution_rule.name
+  arn  = aws_sns_topic.lambda_event_topic.arn
 
   # Ensures the SNS Topic is created before the Event Target
   depends_on = [aws_cloudwatch_event_rule.new_data_submission_rule]
