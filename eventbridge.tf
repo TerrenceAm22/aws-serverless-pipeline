@@ -5,9 +5,9 @@ resource "aws_cloudwatch_event_bus" "data_submission_bus" {
 resource "aws_cloudwatch_event_rule" "new_data_submission_rule" {
   name        = "NewDataSubmissionRule"
   description = "Triggers on new data submission to EventBridge"
-  
+
   event_pattern = jsonencode({
-    source      = ["aws.lambda"]
+    source        = ["aws.lambda"]
     "detail-type" = ["Lambda Function Invocation Result - Success or Failure"]
   })
 }
@@ -17,9 +17,9 @@ resource "aws_sns_topic" "lambda_event_topic" {
 }
 
 resource "aws_cloudwatch_event_target" "sns_target" {
-  rule = aws_cloudwatch_event_rule.new_data_submission_rule.name  
+  rule = aws_cloudwatch_event_rule.new_data_submission_rule.name
   arn  = aws_sns_topic.lambda_event_topic.arn
-# Ensures the SNS Topic is created before the Event Target
+  # Ensures the SNS Topic is created before the Event Target
   depends_on = [aws_cloudwatch_event_rule.new_data_submission_rule]
 }
 

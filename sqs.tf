@@ -33,7 +33,7 @@ resource "aws_sqs_queue_policy" "sns_sqs_policy" {
         Principal = {
           Service = "sns.amazonaws.com"
         },
-        Action = "SQS:SendMessage",
+        Action   = "SQS:SendMessage",
         Resource = aws_sqs_queue.submission_queue.arn,
         Condition = {
           ArnEquals = {
