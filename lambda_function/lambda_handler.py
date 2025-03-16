@@ -43,11 +43,6 @@ def lambda_handler(event, context):
         print("Error:", str(e))
         return {"statusCode": 500, "body": json.dumps({"error": str(e)})}
 
-
-    # # No specific ID was provided, list all data
-    # response = table.scan()
-    # return {"statusCode": 200, "body": json.dumps(response["Items"])}
-
 def handle_get(event, context):
     """
     GET requests to retrieve data from DynamoDB either by ID or all data
