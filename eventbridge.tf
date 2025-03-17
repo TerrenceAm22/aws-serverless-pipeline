@@ -43,6 +43,9 @@ resource "aws_iam_role_policy_attachment" "eventbridge_sns_policy_attachment" {
   role       = aws_iam_role.lambda_execution_role.name
   policy_arn = aws_iam_policy.eventbridge_sns_policy.arn
 }
+
+
+
 # Ensure Rule Exists Before Creating Target
 # resource "aws_cloudwatch_event_target" "analytics_lambda_target" {
 #   rule           = aws_cloudwatch_event_rule.new_data_submission_rule.name

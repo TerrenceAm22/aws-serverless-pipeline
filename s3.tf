@@ -5,7 +5,7 @@ resource "aws_s3_bucket" "analytics_data" {
 }
 
 
-# ✅ Update S3 Bucket Policy to Allow Access Only to Your Account
+# Update S3 Bucket Policy to Allow Access Only to Your Account
 resource "aws_s3_bucket_policy" "analytics_bucket_policy" {
   bucket = aws_s3_bucket.analytics_data.id
 
@@ -25,7 +25,7 @@ resource "aws_s3_bucket_policy" "analytics_bucket_policy" {
 }
 
 
-# ✅ Enable S3 Bucket Versioning 
+#  Enable S3 Bucket Versioning 
 resource "aws_s3_bucket_versioning" "analytics_versioning" {
   bucket = aws_s3_bucket.analytics_data.id
   versioning_configuration {
@@ -33,7 +33,7 @@ resource "aws_s3_bucket_versioning" "analytics_versioning" {
   }
 }
 
-# ✅ Enable Server-Side Encryption
+# Enable Server-Side Encryption
 resource "aws_s3_bucket_server_side_encryption_configuration" "analytics_encryption" {
   bucket = aws_s3_bucket.analytics_data.id
 
@@ -44,7 +44,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "analytics_encrypt
   }
 }
 
-# ✅ S3 Lifecycle Policy: Delete "logs/" objects after 90 days
+# S3 Lifecycle Policy: Delete "logs/" objects after 90 days
 resource "aws_s3_bucket_lifecycle_configuration" "analytics_lifecycle" {
   bucket = aws_s3_bucket.analytics_data.id
 
@@ -53,11 +53,11 @@ resource "aws_s3_bucket_lifecycle_configuration" "analytics_lifecycle" {
     status = "Enabled"
 
     filter {
-      prefix = "logs/" # ✅ Apply the rule only to objects inside the "logs/" folder
+      prefix = "logs/" #  Apply the rule only to objects inside the "logs/" folder
     }
 
     expiration {
-      days = 90 # ✅ Delete logs after 90 days
+      days = 90 # Delete logs after 90 days
     }
   }
 }

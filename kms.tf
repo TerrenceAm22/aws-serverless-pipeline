@@ -6,7 +6,7 @@ resource "aws_kms_key" "lambda_kms_key" {
     Version = "2012-10-17",
     Id      = "kms-lambda-policy",
     Statement = [
-      # ✅ AWS Root User full access
+      # 
       {
         Effect = "Allow",
         Principal = {
@@ -15,7 +15,7 @@ resource "aws_kms_key" "lambda_kms_key" {
         Action   = "kms:*",
         Resource = "*"
       },
-      # ✅ Allow Lambda execution role to use the key
+      # Allow Lambda execution role to use the key
       {
         Effect = "Allow",
         Principal = {
@@ -27,7 +27,7 @@ resource "aws_kms_key" "lambda_kms_key" {
         ],
         Resource = "arn:aws:kms:us-east-1:571600861898:key/"
       },
-      # ✅ STS-assumed roles (Lambda when running)
+      # STS-assumed roles (Lambda when running)
       {
         Effect = "Allow",
         Principal = {

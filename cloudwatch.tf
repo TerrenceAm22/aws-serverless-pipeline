@@ -18,7 +18,7 @@ resource "aws_cloudwatch_metric_alarm" "lambda_errors" {
 
 
 
-# CloudWatch Log Group with Retention Policy (7 Days)
+# CloudWatch Log Group with Retention Policy (7 Days) which is best practice for cost management and how frequent the logs are accessed. 
 resource "aws_cloudwatch_log_group" "lambda_logs" {
   name              = "/aws/lambda/${aws_lambda_function.data_processor.function_name}"
   retention_in_days = 7 # Keeps logs for 7 days before deletion
