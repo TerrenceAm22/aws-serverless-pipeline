@@ -149,3 +149,65 @@ resource "aws_iam_role_policy_attachment" "lambda_kms_attach" {
   policy_arn = aws_iam_policy.lambda_kms_policy.arn
   role       = aws_iam_role.lambda_execution_role.name
 }
+
+
+resource "aws_iam_role" "sns_delivery_logging_role" {
+  name = "sns-delivery-logging-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [{
+      Effect = "Allow",
+      Principal = {
+        Service = "sns.amazonaws.com"
+      },
+      Action = "sts:AssumeRole"
+    }]
+  })
+}
+
+resource "aws_iam_policy" "sns_logging_policy" {
+  name = "sns-logging-policy"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [{
+      Effect = "Allow",
+      Action = [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      Resource = "*"
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "sns_logging_attach" {
+  role       = aws_iam_role.sns_delivery_logging_role.name
+  policy_arn = aws_iam_policy.sns_logging_policy.arn
+}
+
+
+resource "aws_iam_policy" "lambda_sns_publish_policy" {
+  name        = "LambdaSNSPublishPolicy"
+  description = "Allow Lambda to publish to SNS topic"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement : [
+      {
+        Effect = "Allow",
+        Action = [
+          "sns:Publish"
+        ],
+        Resource = "arn:aws:sns:us-east-1:571600861898:submission-notification-topic"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_sns_publish_attach" {
+  role       = aws_iam_role.lambda_execution_role.name
+  policy_arn = aws_iam_policy.lambda_sns_publish_policy.arn
+}

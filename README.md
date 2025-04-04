@@ -84,6 +84,7 @@ Resources created should be:
 3. Lambda Function
 4. IAM policies configured for each resource. 
 5. KMS associated with API, for security. 
+6. Cloudwatch Set up.
 
 
 Testing API Gateway, with the following endpoints. 
@@ -118,6 +119,12 @@ Last timestamp see rate limit function in lambda
 Optional updates can include PITR for backup purposes. 
 
 Cloudwatch Monitoring Set up 
+
+1. I created a resource  for cloudwatch log group for the lambda function to store execution logs
+2. Also created for API Gateway
+3. Every execution on lambda writes logs to the log group "/aws/lambda/dataProcessor" automatically. Same for API gateway when a request (GET,POST) is called. 
+4. IAM policy allowing lambda to create/write logs to cloudwatch. 
+5. Best practice is a 7 day retention policy based on frequently the logs are accessed, different policies depend on the services and other outside regulations. Use Case dependent. 
 
 
 Security Aspect.
@@ -187,3 +194,9 @@ Some problems I encountered while constructing the project.
  5. Drawing the architecture diagram and understanding how each service interacts with the other within AWS. 
  6. Configuring Github Actions. 
  7. Setting up the eventbridge data submit bus. 
+ 8. Common errors I would get is when using terraform is getting "undeclared resource at a line" "or duplicate resource please create an unqiue resource name" 
+
+
+
+ Some Optional performace enhancements to this project to increase its scalability, would be to enable auto scaling for DynamoDB for the large scale bulk inserts. 
+ Implementing SQS as a buffer, instead of calling lambda directly, you can send messages to a queue. You can configure lambda to poll and process those messages in batches. This can help in reducing request failures if their is alot of data being sent be API gateway. 
