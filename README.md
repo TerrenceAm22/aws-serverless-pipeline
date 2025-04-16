@@ -1,5 +1,5 @@
 
-![Lab (1)](https://github.com/user-attachments/assets/9282bf86-2366-4c6d-80a0-57a523cd6e76)
+https://lucid.app/lucidchart/7ba26298-0c83-4cb3-8bca-910d0eb2de85/edit?invitationId=inv_88eab7b5-29ba-4311-ad58-dd21b84f0838&page=0_0#
 
 
 
